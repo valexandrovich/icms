@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-002
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              create table sys.stored_step (
+                id bigserial not null,
+                stored_job_id bigint,
+                step_order integer,
+                service_name varchar(255),
+                worker_name varchar(255),
+                is_enabled boolean,
+                is_skippable boolean,
+                primary key (id)
+              );
+              
+              alter table if exists sys.stored_step_parameter
+              add constraint stored_step__stored_job__fk foreign key (stored_job_id) references sys.stored_job;
+              
+              

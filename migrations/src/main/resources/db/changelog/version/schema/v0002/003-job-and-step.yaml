@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-004
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              create table sys.job
+              (
+              id             bigserial primary key,
+              stored_job_id  bigint
+              constraint job__stored_job__fk
+              references sys.stored_job,
+              started_at     timestamp(6),
+              finished_at    timestamp(6),
+              initiator_name varchar(255)
+              );
+              
+              alter table sys.job
+              owner to icms_app;
+              
+              create index job__started_at_index
+              on sys.job (started_at);
+              
+              create table sys.job_result
+              (
+              job_id bigint       not null
+              constraint job_result__job__fk
+              references sys.job,
+              key    varchar(255) not null,
+              value  varchar(255),
+              primary key (job_id, key)
+              );
+              
+              alter table sys.job_result
+              owner to icms_app;
+              
+              create table sys.step
+              (
+              id             bigserial
+              primary key,
+              job_id         bigint
+              constraint step__job__fk
+              references sys.job,
+              stored_step_id bigint
+              constraint step__stored_step__fk
+              references sys.stored_step,
+              started_at     timestamp(6),
+              finished_at    timestamp(6),
+              progress       double precision,
+              status         varchar(255),
+              comment        text
+              );
+              
+              alter table sys.step
+              owner to icms_app;
+              
+              create index step__started_at_index
+              on sys.step (started_at);

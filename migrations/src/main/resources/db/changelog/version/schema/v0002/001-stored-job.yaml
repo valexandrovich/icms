@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-001
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              create table sys.stored_job (
+                  id bigserial not null,
+                  source_nick_name varchar(255),
+                  name varchar(255),
+                  description TEXT,
+                  is_enabled boolean,
+                  is_persistable boolean,
+                  primary key (id)
+              );
+              

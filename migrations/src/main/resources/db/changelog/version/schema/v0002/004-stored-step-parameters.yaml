@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-003
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              create table sys.stored_step_parameter (
+                stored_step_id bigint,
+                key varchar(255),
+                value varchar(255)
+              );
+              
+              alter table if exists sys.stored_step_parameter
+              add constraint stored_step_parameter__stored_step__fk foreign key (stored_step_id) references sys.stored_step;
+              
+              

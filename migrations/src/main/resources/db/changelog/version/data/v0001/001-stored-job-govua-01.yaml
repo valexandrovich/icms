@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-001
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              insert into sys.stored_job(id, source_nick_name, name, description, is_enabled, is_persistable)
+              values (1, 'govua_01', 'Відомості про справи про банкрутство', 'Відомості про справи про банкрутство - Державна судова адміністрація України', true, true);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (1, 1, 1, 'downloader', 'govua01', true, false);
+
+              insert into sys.stored_step_parameter(stored_step_id, key, value)
+              values (1, 'packageId', 'vidomosti-pro-spravi-pro-bankrutstvo-1'),
+               (1, 'retries', '10'),
+               (1, 'timeoutSec', '30');
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (2, 1, 2, 'importer', 'govua01', true, false);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (3, 1, 3, 'enricher', 'govua01', false, false);

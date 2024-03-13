@@ -30,9 +30,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-@Service("govua0809")
+@Service("govua09")
 @Slf4j
-public class GovuaDownloader0809 implements Downloadable {
+public class Govua09Downloader implements Downloadable {
 
     ObjectMapper objectMapper = new ObjectMapper();
 

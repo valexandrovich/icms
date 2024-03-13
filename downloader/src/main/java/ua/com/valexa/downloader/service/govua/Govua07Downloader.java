@@ -78,7 +78,7 @@ public class Govua07Downloader implements Downloadable {
             sendStepUpdate(taskExecutionContextDto);
             GovuaRevisionMetadata metadata = getRevisionMetadata(actualResourceId, stepParameters);
 
-            String fileName = mountPoint + System.getProperty("file.separator") + stepRequestDto.getJobId() + "_govua_01." + metadata.getFileExtension();
+            String fileName = mountPoint + System.getProperty("file.separator") + stepRequestDto.getJobId() + "_govua_07." + metadata.getFileExtension();
 
             String downloadedFile = downloadFile(metadata.getUrl(), fileName, stepParameters, taskExecutionContextDto);
 

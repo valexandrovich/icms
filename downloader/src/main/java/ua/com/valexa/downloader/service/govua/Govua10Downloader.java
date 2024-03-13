@@ -32,7 +32,7 @@ import java.util.Map;
 
 @Service("govua10")
 @Slf4j
-public class GovuaDownloader10 implements Downloadable {
+public class Govua10Downloader implements Downloadable {
 
     ObjectMapper objectMapper = new ObjectMapper();
 

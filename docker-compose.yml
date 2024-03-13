@@ -44,7 +44,7 @@ services:
       - QUEUE_SCHEDULER_RESPONSE_NAME=icms.scheduler-response
       - LOG_LEVEL=debug
     volumes:
-      - shared_files:/app/data
+      - /tmp/ISMC_STORAGE:/app/data
     depends_on:
       - postgres
       - migrations
@@ -72,7 +72,7 @@ services:
       - QUEUE_SCHEDULER_RESPONSE_NAME=icms.scheduler-response
       - LOG_LEVEL=debug
     volumes:
-      - shared_files:/app/data
+      - /tmp/ISMC_STORAGE:/app/data
     depends_on:
       - postgres
       - migrations
@@ -129,6 +129,8 @@ services:
       - postgres
       - migrations
       - rabbitmq
+    ports:
+      - "9000:9000"
     networks:
       - icms-network
 
@@ -156,6 +158,21 @@ services:
       - DB_PASSWORD=3211
     depends_on:
       - postgres
+    networks:
+      - icms-network
+
+
+  frontend:
+    build:
+      context: ./web-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:5173"
+    volumes:
+      - ./web-frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
     networks:
       - icms-network
 

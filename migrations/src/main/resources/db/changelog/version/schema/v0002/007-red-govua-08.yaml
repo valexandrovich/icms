@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-007
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              create table red.govua_08 (
+              hash uuid not null primary key,
+              create_revision_id bigint,
+              update_revision_id bigint,
+              disable_revision_id bigint,
+              create_date timestamp(6),
+              update_date timestamp(6),
+              disable_date timestamp(6),
+          
+          
+              article_crim varchar(255),
+              birthday date,
+              category varchar(255),
+              contact varchar(255),
+              first_name_en varchar(255),
+              first_name_ru varchar(255),
+              first_name_ua varchar(255),
+              id varchar(255),
+              
+              last_name_en varchar(255),
+              last_name_ru varchar(255),
+              last_name_ua varchar(255),
+              lost_date date,
+              lost_place varchar(255),
+              ovd varchar(255),
+              patronymic_name_en varchar(255),
+              patronymic_name_ru varchar(255),
+              patronymic_name_ua varchar(255),
+              photoid varchar(255),
+              restraint varchar(255),
+              sex varchar(255),
+          
+              is_overprocess boolean,
+              is_unprocessable boolean,
+              unprocessable_comment varchar(255)
+              );
+              alter table red.govua_08 owner to icms_app;

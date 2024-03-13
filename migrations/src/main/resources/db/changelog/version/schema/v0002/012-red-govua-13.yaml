@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-012
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              create table red.govua_13 (
+              hash uuid not null primary key,
+              create_revision_id bigint,
+              update_revision_id bigint,
+              disable_revision_id bigint,
+              create_date timestamp(6),
+              update_date timestamp(6),
+              disable_date timestamp(6),
+              id varchar(255),
+              insert_date date,
+              number varchar(255),
+              ovd varchar(255),
+              series varchar(255),
+              status varchar(255),
+              theft_date date,
+              type varchar(255),
+              is_overprocess boolean,
+              is_unprocessable boolean,
+              unprocessable_comment varchar(255)
+              );
+              alter table red.govua_13 owner to icms_app;

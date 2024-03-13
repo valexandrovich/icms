@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-006
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              create table red.govua_07 (
+              hash uuid not null primary key,
+              create_revision_id bigint,
+              update_revision_id bigint,
+              disable_revision_id bigint,
+              create_date timestamp(6),
+              update_date timestamp(6),
+              disable_date timestamp(6),
+              debtor_birthdate date,
+              debtor_code varchar(255),
+              debtor_name varchar(255),
+              email_addr varchar(255),
+              emp_full_fio varchar(255),
+              emp_phone_num varchar(255),
+              org_name varchar(255),
+              org_phone_num varchar(255),
+              publisher varchar(255),
+              vd_cat varchar(255),
+              vp_ordernum varchar(255),
+              is_overprocess boolean,
+              is_unprocessable boolean,
+              unprocessable_comment varchar(255)
+              );
+              
+              alter table red.govua_07 owner to icms_app;

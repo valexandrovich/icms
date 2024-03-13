@@ -23,6 +23,7 @@
         <module>scheduler</module>
         <module>downloader</module>
         <module>importer</module>
+        <module>web-backend</module>
     </modules>
 
     <properties>

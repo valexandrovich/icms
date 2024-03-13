@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-004
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              insert into sys.stored_job(id, source_nick_name, name, description, is_enabled, is_persistable)
+              values (9, 'govua_09', 'Інформація про безвісно зниклих громадян', 'Інформація про безвісно зниклих громадян - Міністерство внутрішніх справ України', true, true);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (10, 9, 1, 'downloader', 'govua09', true, false);
+
+              insert into sys.stored_step_parameter(stored_step_id, key, value)
+              values (10, 'packageId', '470196d3-4e7a-46b0-8c0c-883b74ac65f0'),
+               (10, 'retries', '10'),
+               (10, 'timeoutSec', '30');
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (11, 9, 2, 'importer', 'govua09', true, false);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (12, 9, 3, 'enricher', 'govua09', false, false);

@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.tab-btn {
+    @apply bg-gray-300 px-12 py-2  text-white font-semibold;
+}
+
+.tab-btn-active {
+    @apply bg-green-600;
+}

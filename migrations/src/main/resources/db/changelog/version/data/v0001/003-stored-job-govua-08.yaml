@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-003
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              insert into sys.stored_job(id, source_nick_name, name, description, is_enabled, is_persistable)
+              values (8, 'govua_08', 'Інформація про осіб, які переховуються від органів влади', 'Інформація про осіб, які переховуються від органів влади - Міністерство внутрішніх справ України', true, true);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (7, 8, 1, 'downloader', 'govua08', true, false);
+
+              insert into sys.stored_step_parameter(stored_step_id, key, value)
+              values (7, 'packageId', '7c51c4a0-104b-4540-a166-e9fc58485c1b'),
+               (7, 'retries', '10'),
+               (7, 'timeoutSec', '30');
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (8, 8, 2, 'importer', 'govua08', true, false);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (9, 8, 3, 'enricher', 'govua08', false, false);

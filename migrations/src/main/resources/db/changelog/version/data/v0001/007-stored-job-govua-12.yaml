@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-007
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              insert into sys.stored_job(id, source_nick_name, name, description, is_enabled, is_persistable)
+              values (12, 'govua_12', 'Інформація про паспорти громадянина України по яких зареєстровано заяви щодо викрадання чи втрати. А також інформація про паспорти громадянина України, визнані недійсними', 'Інформація про паспорти громадянина України по яких зареєстровано заяви щодо викрадання чи втрати. А також інформація про паспорти громадянина України, визнані недійсними - Міністерство внутрішніх справ України', true, true);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (19, 12, 1, 'downloader', 'govua12', true, false);
+
+              insert into sys.stored_step_parameter(stored_step_id, key, value)
+              values (19, 'packageId', 'ab09ed00-4f51-4f6c-a2f7-1b2fb118be0f'),
+               (19, 'retries', '10'),
+               (19, 'timeoutSec', '30');
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (20, 12, 2, 'importer', 'govua12', true, false);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (21, 12, 3, 'enricher', 'govua12', false, false);

@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-005
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              insert into sys.stored_job(id, source_nick_name, name, description, is_enabled, is_persistable)
+              values (10, 'govua_10', 'Паспорти громадянина України, які визнані недійсними', 'Паспорти громадянина України, які визнані недійсними - Державна міграційна служба України', true, true);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (13, 10, 1, 'downloader', 'govua10', true, false);
+
+              insert into sys.stored_step_parameter(stored_step_id, key, value)
+              values (13, 'packageId', '44e1d462-5de4-40e5-b722-46f2aa9a1e81'),
+               (13, 'retries', '10'),
+               (13, 'timeoutSec', '30');
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (14, 10, 2, 'importer', 'govua10', true, false);
+
+              insert into sys.stored_step(id, stored_job_id, step_order, service_name, worker_name, is_enabled, is_skippable)
+              values (15, 10, 3, 'enricher', 'govua10', false, false);

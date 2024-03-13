@@ -6,7 +6,7 @@ services:
       context: ./cpms
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://host.docker.internal:5432/icms_db
+      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
 #      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
       - DB_USER=icms_app
       - DB_PASSWORD=3211
@@ -30,7 +30,7 @@ services:
       context: ./downloader
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://host.docker.internal:5432/icms_db
+      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
 #      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
       - DB_USER=icms_app
       - DB_PASSWORD=3211
@@ -58,7 +58,7 @@ services:
       context: ./importer
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://host.docker.internal:5432/icms_db
+      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
 #      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
       - DB_USER=icms_app
       - DB_PASSWORD=3211
@@ -86,7 +86,7 @@ services:
       context: ./scheduler
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://host.docker.internal:5432/icms_db
+      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
 #      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
       - DB_USER=icms_app
       - DB_PASSWORD=3211
@@ -114,7 +114,7 @@ services:
       context: ./web-backend
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://host.docker.internal:5432/icms_db
+      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
 #      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
       - DB_USER=icms_app
       - DB_PASSWORD=3211
@@ -152,7 +152,7 @@ services:
       context: ./migrations
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://host.docker.internal:5432/icms_db
+      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
 #      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
       - DB_USER=icms_app
       - DB_PASSWORD=3211

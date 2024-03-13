@@ -1,5 +1,9 @@
 package ua.com.valexa.downloader.service.govua;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -21,14 +25,17 @@ import ua.com.valexa.common.dto.scheduler.TaskExecutionContextDto;
 import ua.com.valexa.common.enums.TaskStatus;
 import ua.com.valexa.downloader.service.Downloadable;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Service("govua12")
 @Slf4j
@@ -41,8 +48,6 @@ public class GovuaDownloader12 implements Downloadable {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
-
-
 
     @Override
     public StepResponseDto handleRequest(StepRequestDto stepRequestDto) {
@@ -66,19 +71,43 @@ public class GovuaDownloader12 implements Downloadable {
             sendStepUpdate(taskExecutionContextDto);
             JsonNode packageMetadata = getPackageMetadata(stepParameters);
 
-            taskExecutionContextDto.setComment("Зчитування актуального ресурсу");
-            sendStepUpdate(taskExecutionContextDto);
-            String actualResourceId = getActualResourceId(packageMetadata, stepParameters);
+            
+            Set<String> urls = parseFileUrls(packageMetadata);
+            
+//            taskExecutionContextDto.setComment("Зчитування актуального ресурсу");
+//            sendStepUpdate(taskExecutionContextDto);
+//            String actualResourceId = getActualResourceId(packageMetadata, stepParameters);
 
-            taskExecutionContextDto.setComment("Зчитування метадати ресурсу");
-            sendStepUpdate(taskExecutionContextDto);
-            GovuaRevisionMetadata metadata = getRevisionMetadata(actualResourceId, stepParameters);
+//            taskExecutionContextDto.setComment("Зчитування метадати ресурсу");
+//            sendStepUpdate(taskExecutionContextDto);
+//            GovuaRevisionMetadata metadata = getRevisionMetadata(actualResourceId, stepParameters);
 
-            String fileName = mountPoint + System.getProperty("file.separator") + stepRequestDto.getJobId() + "_" + stepParameters.getSourceName() + "." + metadata.getFileExtension();
+//            String fileName = mountPoint + System.getProperty("file.separator") + stepRequestDto.getJobId() + "_" + stepParameters.getSourceName() + "." + metadata.getFileExtension();
 
-            String downloadedFile = downloadFile(metadata.getUrl(), fileName, stepParameters, taskExecutionContextDto);
 
-            stepResponseDto.getResults().put("file", downloadedFile);
+            Map<String, String> urlFilesMap = new HashMap<>();
+            String fileNameMerged = mountPoint + System.getProperty("file.separator") + stepRequestDto.getJobId() + "_" + stepParameters.getSourceName() + ".json";
+            int i = 1;
+            for (String u : urls){
+                String fileName = mountPoint + System.getProperty("file.separator") + stepRequestDto.getJobId() + "_" + stepParameters.getSourceName() +"_part_" + i + ".json";
+                i++;
+                urlFilesMap.put(u, fileName);
+            }
+
+            int partCount = urlFilesMap.size();
+            int currentPart = 1;
+
+            for (String url : urlFilesMap.keySet()){
+                downloadFile(new URL(url), urlFilesMap.get(url), stepParameters, taskExecutionContextDto, partCount, currentPart++);
+            }
+
+            mergeJsonFiles(urlFilesMap, fileNameMerged);
+
+
+
+//            String downloadedFile = downloadFile(metadata.getUrl(), fileName, stepParameters, taskExecutionContextDto);
+
+            stepResponseDto.getResults().put("file", fileNameMerged);
             stepResponseDto.setStatus(TaskStatus.FINISHED);
             stepResponseDto.setComment(taskExecutionContextDto.getComment());
         } catch (Exception e){
@@ -87,6 +116,58 @@ public class GovuaDownloader12 implements Downloadable {
             stepResponseDto.setStatus(TaskStatus.FAILED);
         }
         return stepResponseDto;
+    }
+
+    private static void mergeJsonFiles(Map<String, String> filePathsMap, String outputFilePath) throws IOException {
+        JsonFactory jsonFactory = new JsonFactory();
+        try (JsonGenerator jsonGenerator = jsonFactory.createGenerator(new FileWriter(outputFilePath))) {
+            jsonGenerator.writeStartArray(); // Start the JSON array in the output file
+
+            for (String filePath : filePathsMap.values()) {
+                try (JsonParser jsonParser = jsonFactory.createParser(new File(filePath))) {
+                    if (jsonParser.nextToken() == JsonToken.START_ARRAY) {
+                        while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                            jsonGenerator.copyCurrentStructure(jsonParser); // Copy each element to the output
+                        }
+                    }
+                }
+            }
+
+            jsonGenerator.writeEndArray();
+
+            for (String filePath : filePathsMap.values()) {
+                try {
+                    Path path = Paths.get(filePath);
+                    Files.delete(path);
+//                    System.out.println("Deleted: " + filePath);
+                } catch (IOException e) {
+//                    System.err.println("Could not delete file: " + filePath + ". Reason: " + e.getMessage());
+                }
+            }
+            // End the JSON array
+        }
+    }
+
+    private Set<String> parseFileUrls(JsonNode packageMetadata) {
+        Set<String> urls = new HashSet<>();
+
+        // Check if 'result' node is present and if 'resources' is an array
+        if (packageMetadata != null && packageMetadata.has("result")) {
+            JsonNode result = packageMetadata.get("result");
+            if (result.has("resources") && result.get("resources").isArray()) {
+                JsonNode resources = result.get("resources");
+
+                // Loop through all elements in the 'resources' array except the last one
+                for (int i = 0; i < resources.size() - 1; i++) {
+                    JsonNode resource = resources.get(i);
+                    if (resource.has("url")) {
+                        urls.add(resource.get("url").asText());
+                    }
+                }
+            }
+        }
+
+        return urls;
     }
 
     private JsonNode getPackageMetadata(StepParameters stepParameters) throws RuntimeException{
@@ -130,7 +211,7 @@ public class GovuaDownloader12 implements Downloadable {
     private String getActualResourceId(JsonNode packageMetadata, StepParameters stepParameters) throws RuntimeException{
         try {
             JsonNode resources = packageMetadata.get("result").get("resources");
-            return resources.get(0).get("id").textValue();
+            return resources.get(resources.size() -1).get("id").textValue();
         } catch (Exception e){
             throw new RuntimeException("Can't get actual resource id for " + stepParameters.sourceName);
         }
@@ -184,7 +265,7 @@ public class GovuaDownloader12 implements Downloadable {
 
 
 
-    private String downloadFile(URL fileUrl, String filename, StepParameters stepParameters, TaskExecutionContextDto taskExecutionContextDto) throws IOException {
+    private String downloadFile(URL fileUrl, String filename, StepParameters stepParameters, TaskExecutionContextDto taskExecutionContextDto, int partCount, int currentPart) throws IOException {
         taskExecutionContextDto.setComment("Зчитування актуального ресурсу");
         taskExecutionContextDto.setProgress(0.0);
         taskExecutionContextDto.setStatus(TaskStatus.IN_PROGRESS);
@@ -195,6 +276,8 @@ public class GovuaDownloader12 implements Downloadable {
         long totalBytesRead = 0;
         int attempt = 0;
         long fileSize = getFileSize(fileUrl);
+
+
 
         try (RandomAccessFile destinationFile = new RandomAccessFile(destination, "rw")) {
             while (totalBytesRead < fileSize && attempt < stepParameters.getRequestRetries()) {
@@ -219,7 +302,7 @@ public class GovuaDownloader12 implements Downloadable {
                             int currentPercentage = (int) (100 * totalBytesRead / fileSize);
                             if (currentPercentage > lastPercentagePrinted) {
                                 log.debug("Download progress: " + currentPercentage + "%");
-                                String comment = "Завантажено " + totalBytesRead / 1000 / 1000 + " mb / " + fileSize / 1000 / 1000 + " mb";
+                                String comment = "Завантажено " + totalBytesRead / 1000 / 1000 + " mb / " + fileSize / 1000 / 1000 + " mb; ( Файл " + currentPart + "/" + partCount + ")" ;
 
                                 taskExecutionContextDto.setComment(comment);
                                 taskExecutionContextDto.setProgress((double) totalBytesRead / fileSize);

@@ -6,19 +6,18 @@ services:
       context: ./cpms
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
-#      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
-      - DB_USER=icms_app
-      - DB_PASSWORD=3211
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=icms_app
-      - RABBITMQ_PASSWORD=3211
-      - DOWNLOADER_MOUNT_POINT=./
-      - QUEUE_CPMS_NAME=icms.cpms
-      - LOG_LEVEL=debug
+      - DB_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - DOWNLOADER_MOUNT_POINT=${DOWNLOADER_MOUNT_POINT}
+      - QUEUE_CPMS_NAME=${QUEUE_CPMS_NAME}
+      - LOG_LEVEL=${LOG_LEVEL}
     depends_on:
-#      - postgres
+      #      - postgres
       - migrations
       - rabbitmq
     networks:
@@ -30,14 +29,13 @@ services:
       context: ./downloader
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
-#      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
-      - DB_USER=icms_app
-      - DB_PASSWORD=3211
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=icms_app
-      - RABBITMQ_PASSWORD=3211
+      - DB_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - DOWNLOADER_MOUNT_POINT=/app/data
       - QUEUE_DOWNLOADER_NAME=icms.downloader
       - QUEUE_CPMS_NAME=icms.cpms
@@ -46,7 +44,7 @@ services:
     volumes:
       - ~/ICMS_STORAGE:/app/data
     depends_on:
-#      - postgres
+      #      - postgres
       - migrations
       - rabbitmq
     networks:
@@ -58,14 +56,13 @@ services:
       context: ./importer
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
-#      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
-      - DB_USER=icms_app
-      - DB_PASSWORD=3211
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=icms_app
-      - RABBITMQ_PASSWORD=3211
+      - DB_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - DOWNLOADER_MOUNT_POINT=/app/data
       - QUEUE_IMPORTER_NAME=icms.importer
       - QUEUE_CPMS_NAME=icms.cpms
@@ -74,7 +71,7 @@ services:
     volumes:
       - ~/ICMS_STORAGE:/app/data
     depends_on:
-#      - postgres
+      #      - postgres
       - migrations
       - rabbitmq
     networks:
@@ -86,14 +83,13 @@ services:
       context: ./scheduler
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
-#      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
-      - DB_USER=icms_app
-      - DB_PASSWORD=3211
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=icms_app
-      - RABBITMQ_PASSWORD=3211
+      - DB_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - DOWNLOADER_MOUNT_POINT=./
       - QUEUE_DOWNLOADER_NAME=icms.downloader
       - QUEUE_IMPORTER_NAME=icms.importer
@@ -102,7 +98,7 @@ services:
       - QUEUE_SCHEDULER_RESPONSE_NAME=icms.scheduler-response
       - LOG_LEVEL=debug
     depends_on:
-#      - postgres
+      #      - postgres
       - migrations
       - rabbitmq
     networks:
@@ -114,19 +110,18 @@ services:
       context: ./web-backend
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
-#      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
-      - DB_USER=icms_app
-      - DB_PASSWORD=3211
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=icms_app
-      - RABBITMQ_PASSWORD=3211
+      - DB_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - WEB_BACKEND_PORT=9000
       - LOG_LEVEL=debug
       - QUEUE_SCHEDULER_STORED_JOB_INIT_NAME=icms.scheduler-stored-job-init
     depends_on:
-#      - postgres
+      #      - postgres
       - migrations
       - rabbitmq
     ports:
@@ -134,30 +129,29 @@ services:
     networks:
       - icms-network
 
-#  postgres:
-#    image: postgres:latest
-#    environment:
-#      POSTGRES_DB: icms_db
-#      POSTGRES_USER: icms_app
-#      POSTGRES_PASSWORD: 3211
-##    volumes:
-##      - postgres_data:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
-#    networks:
-#      - icms-network
+  #  postgres:
+  #    image: postgres:latest
+  #    environment:
+  #      POSTGRES_DB: icms_db
+  #      POSTGRES_USER: icms_app
+  #      POSTGRES_PASSWORD: 3211
+  ##    volumes:
+  ##      - postgres_data:/var/lib/postgresql/data
+  #    ports:
+  #      - "5432:5432"
+  #    networks:
+  #      - icms-network
 
   migrations:
     build:
       context: ./migrations
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://172.17.0.1:5432/icms_db
-#      - DB_URL=jdbc:postgresql://postgres:5432/icms_db
-      - DB_USER=icms_app
-      - DB_PASSWORD=3211
-#    depends_on:
-#      - postgres
+      - DB_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    #    depends_on:
+    #      - postgres
     networks:
       - icms-network
 
@@ -182,8 +176,8 @@ services:
       RABBITMQ_DEFAULT_USER: icms_app
       RABBITMQ_DEFAULT_PASS: 3211
     ports:
-      - "5672:5672" # AMQP protocol
-      - "15672:15672" # Management UI
+      - "5672:5672"
+      - "15672:15672"
     networks:
       - icms-network
 

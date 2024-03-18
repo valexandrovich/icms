@@ -10,11 +10,11 @@ import {routes} from "@/router/routes.js";
 
         <span class="text-5xl font-montserrat font-semibold">
           <font-awesome-icon :icon="['fas', 'shield-halved']"/>
-          ICMS
+          AFS
         </span>
       </div>
       <div class="text-center">
-        <span class="text-sm ">інформаційна система моніторингу та перевірок</span>
+        <span class="text-sm ">інформаційна система</span>
       </div>
 
       <nav class="py-6">

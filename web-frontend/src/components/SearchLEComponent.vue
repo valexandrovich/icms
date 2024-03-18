@@ -6,6 +6,7 @@ import axios from "axios";
 
 const state = reactive({
   isLoading: false,
+  isNoResults: false,
   searchForm: {
     name: '',
     edrpou: '',
@@ -27,6 +28,7 @@ const clearForm = () => {
 
 const search = () => {
   state.isLoading = true;
+  state.isNoResults = false;
   state.searchResults = null
 
   axios.post('/api/search-red/le', state.searchForm)
@@ -34,6 +36,9 @@ const search = () => {
         console.log(resp)
         state.isLoading = false;
         state.searchResults = resp.data
+        if (state.searchResults.length === 0){
+          state.isNoResults = true;
+        }
       })
       .catch(err => {
         state.isLoading = false;
@@ -74,6 +79,12 @@ const search = () => {
       <div class=" absolute top-0 left-0 w-full text-center" v-if="state.isLoading">
         <span class="text-2xl font-semibold text-gray-500">Завантаження...</span>
       </div>
+
+
+      <div class=" absolute top-0 left-0 w-full text-center" v-if="state.isNoResults">
+        <span class="text-2xl font-semibold text-gray-500">Нічого не знайдено</span>
+      </div>
+
     <div v-if="state.searchResults">
       <div v-if="state.searchResults.govua01List.length > 0">
         <span class=" text-2xl text-gray-400 font-black">Банкрутство:</span>

@@ -1,6 +1,6 @@
 <script setup>
 
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 import axios from "axios";
 import {isoDateStrToShortDateStr, isoDateTimeStrToShortDateStr} from "@/utils/convertors.js";
 
@@ -84,6 +84,23 @@ state.searchResults = null
 
 }
 
+const isNoResults = computed(()=>{
+// Check if searchResults is not null
+  if (state.searchResults !== null) {
+    if (state.searchResults.govua01List.length > 0) return false;
+    if (state.searchResults.govua07List.length > 0) return false;
+    if (state.searchResults.govua08List.length > 0) return false;
+    if (state.searchResults.govua09List.length > 0) return false;
+    if (state.searchResults.govua10List.length > 0) return false;
+    if (state.searchResults.govua11List.length > 0) return false;
+    if (state.searchResults.govua12List.length > 0) return false;
+    if (state.searchResults.govua13List.length > 0) return false;
+    return true;
+
+  }
+  return false;
+})
+
 </script>
 
 <template>
@@ -155,7 +172,7 @@ state.searchResults = null
         <span class="text-2xl font-semibold text-gray-500">Завантаження...</span>
       </div>
 
-      <div class=" absolute top-0 left-0 w-full text-center" v-if="state.isNoResults">
+      <div class=" absolute top-0 left-0 w-full text-center" v-if="isNoResults">
         <span class="text-2xl font-semibold text-gray-500">Нічого не знайдено</span>
       </div>
 

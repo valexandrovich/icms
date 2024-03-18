@@ -1,6 +1,6 @@
 <script setup>
 
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 import {isoDateStrToShortDateStr, isoDateTimeStrToShortDateStr} from "@/utils/convertors.js";
 import axios from "axios";
 
@@ -13,7 +13,7 @@ const state = reactive({
     // address: '',
 
   },
-  searchResults: null
+  searchResults:null
 })
 
 
@@ -46,11 +46,21 @@ const search = () => {
       })
 }
 
+const isNoResults = computed(()=>{
+// Check if searchResults is not null
+  if (state.searchResults !== null) {
+
+    if (state.searchResults.govua01List.length > 0) return false;
+    if (state.searchResults.govua07List.length > 0) return false;
+    return true;
+
+  }
+  return false;
+})
+
 </script>
 
 <template>
-
-
   <div class="flex flex-col gap-2">
     <div class="flex flex-row gap-4 mt-4 flex-wrap">
       <input type="text" class="bg-white p-2 rounded-xl outline w-[550px] outline-gray-400" placeholder="Назва"
@@ -81,7 +91,7 @@ const search = () => {
       </div>
 
 
-      <div class=" absolute top-0 left-0 w-full text-center" v-if="state.isNoResults">
+      <div class=" absolute top-0 left-0 w-full text-center" v-if="isNoResults">
         <span class="text-2xl font-semibold text-gray-500">Нічого не знайдено</span>
       </div>
 

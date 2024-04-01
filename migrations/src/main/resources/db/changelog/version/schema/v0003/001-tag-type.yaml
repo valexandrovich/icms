@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-v0002-001
+      author: valex
+      changes:
+        - sql:
+            sql: |
+              insert into data.tag_type(id, code, description, code_level_1, description_level_1, code_level_2, description_level_2, code_level_3, description_level_3, code_level_4, description_level_4, code_level_5, description_level_5)
+              values (gen_random_uuid(), 'NBB1', 'НЕГАТИВ / ЧОРНИЙ СПИСОК / БАНКРУТСТВО / ПОРУШЕНО СПРАВУ ПРО БАНКРУТСТВО', 'N', 'НЕГАТИВ', 'B', 'ЧОРНИЙ СПИСОК', 'B', 'БАНКРУТСТВО', '1', 'ПОРУШЕНО СПРАВУ ПРО БАНКРУТСТВО', null, null )
+              

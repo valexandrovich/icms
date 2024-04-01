@@ -35,6 +35,9 @@ public class SearchRedPpService {
     @Autowired
     Govua13Service govua13Service;
 
+    @Autowired
+    UploaderPpRowService uploaderPpRowService;
+
 
     public SearchRedPpResult searchPp(PersonSearchDto dto){
 
@@ -66,6 +69,8 @@ public class SearchRedPpService {
         if (dto.getLocalPassportNumber() != null && !dto.getLocalPassportNumber().isBlank()){
             result.getGovua10List().addAll(govua10Service.findByPassportNumber(dto.getLocalPassportSerial(), dto.getLocalPassportNumber()));
             result.getGovua12List().addAll(govua12Service.findByPassportNumber(dto.getLocalPassportSerial(), dto.getLocalPassportNumber()));
+            result.getUploaderPpRows().addAll(uploaderPpRowService.findByLocalPassportNumber(dto.getLocalPassportSerial(), dto.getLocalPassportNumber()));
+
         }
 
         if (dto.getIdPassportNumber() != null && !dto.getIdPassportNumber().isBlank()){

@@ -2,6 +2,7 @@ import SearchView from "@/views/SearchView.vue";
 import SchedulerView from "@/views/SchedulerView.vue";
 import ProgresView from "@/views/ProgresView.vue";
 import UploadView from "@/views/UploadView.vue";
+import UploaderRevisions from "@/views/UploaderRevisions.vue";
 
 export const routes = [
     {
@@ -28,6 +29,14 @@ export const routes = [
         icon: ['fas', 'cloud-arrow-up'],
         isSideMenu: true
     },
+    // {
+    //     path: '/uploader-revisions',
+    //     name: 'uploader-revisions',
+    //     component: UploaderRevisions,
+    //     label: 'Архів завантажень',
+    //     icon: ['fas', 'cloud-arrow-up'],
+    //     isSideMenu: true
+    // },
     {
         path: '/progress',
         name: 'progress',

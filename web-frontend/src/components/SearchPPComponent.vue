@@ -95,6 +95,7 @@ const isNoResults = computed(()=>{
     if (state.searchResults.govua11List.length > 0) return false;
     if (state.searchResults.govua12List.length > 0) return false;
     if (state.searchResults.govua13List.length > 0) return false;
+    if (state.searchResults.uploaderPpRows.length > 0) return false;
     return true;
 
   }
@@ -180,6 +181,53 @@ const isNoResults = computed(()=>{
 
 
 
+        <div v-if="state.searchResults.uploaderPpRows.length > 0">
+          <span class=" text-2xl text-gray-400 font-black">Внутрішні дані:</span>
+          <table>
+            <thead>
+            <th>ID</th>
+            <th>Джерело</th>
+            <th>ПІБ (укр)</th>
+            <th>ПІБ (рос)</th>
+            <th>ПІБ (анг)</th>
+            <th>Дата народження</th>
+            <th>РНОКПП</th>
+            <th>Паспорт кнжка</th>
+            <th>Паспорт ID картка</th>
+            <th>Паспорт громадянина України для виїзду за кородон</th>
+            <th>Код тегу</th>
+            <th>Дата події</th>
+            <th>Початок дії тегу</th>
+            <th>Закінчення дії тегу</th>
+            </thead>
+            <tbody>
+            <tr v-for="g1 in state.searchResults.uploaderPpRows" :key="g1.id">
+              <td>{{ g1.id }}</td>
+              <td>{{ g1.source }}</td>
+              <td>{{ g1.lastNameUa }} {{ g1.firstNameUa }} {{ g1.patronymicNameUa }}</td>
+              <td>{{ g1.lastNameRu }} {{ g1.firstNameRu }} {{ g1.patronymicNameRu }}</td>
+              <td>{{ g1.lastNameEn }} {{ g1.firstNameEn }} {{ g1.patronymicNameEn }}</td>
+              <td>{{ g1.birthday }}</td>
+              <td>{{ g1.inn }}</td>
+              <td>{{ g1.localPassportSerial }}{{ g1.localPassportNumber }}</td>
+              <td>{{ g1.idPassportNumber }}</td>
+              <td>{{ g1.intPassportSerial }}{{ g1.intPassportNumber }}</td>
+              <td>{{ g1.mkCode }}</td>
+              <td>{{ g1.mkEventDate }}</td>
+              <td>{{ g1.mkStartDate }}</td>
+              <td>{{ g1.mkEndDate }}</td>
+
+<!--              <td> {{ isoDateTimeStrToShortDateStr(g1.createDate) }}</td>-->
+<!--              <td>{{ isoDateTimeStrToShortDateStr(g1.disableDate) }}</td>-->
+<!--              <td>{{ g1.firmEdrpou }}</td>-->
+<!--              <td>{{ g1.firmName }}</td>-->
+<!--              <td>{{ g1.type }}</td>-->
+<!--              <td>{{ g1.caseNumber }}</td>-->
+<!--              <td>{{ g1.courtName }}</td>-->
+            </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div v-if="state.searchResults.govua01List.length > 0">
           <span class=" text-2xl text-gray-400 font-black">Банкрутство:</span>

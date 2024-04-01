@@ -18,4 +18,5 @@ public class SearchRedPpResult {
     List<GovUa11> govua11List = new ArrayList<>();
     List<GovUa12> govua12List = new ArrayList<>();
     List<GovUa13> govua13List = new ArrayList<>();
+    List<UploaderPpRow> uploaderPpRows = new ArrayList<>();
 }

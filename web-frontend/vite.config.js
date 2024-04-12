@@ -14,6 +14,7 @@ export default defineConfig({
         // target: 'http://web-backend:9000',
         target: 'http://localhost:9000',
         changeOrigin: true,
+        secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     },

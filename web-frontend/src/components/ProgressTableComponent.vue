@@ -13,7 +13,8 @@ const state = reactive({
 
 const fetchJobs = () => {
   // console.log('fetching jobs')
-  axios.get('/api/cpms/jobs')
+  // axios.get('/api/cpms/jobs')
+  axios.get('http://localhost:9000/cpms/jobs')
       .then(resp => {
         state.jobs = resp.data
 

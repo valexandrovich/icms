@@ -117,7 +117,8 @@ const handleFileUpload = (event) => {
 }
 
 const fetchTagTypes = () => {
-  axios.get('/api/tags/all')
+  // axios.get('/api/tags/all')
+  axios.get('http://localhost:9000/tags/all')
       .then(
           resp => {
             state.tagTypes = resp.data

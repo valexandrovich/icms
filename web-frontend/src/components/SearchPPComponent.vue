@@ -68,7 +68,8 @@ state.isNoResults = false;
 state.searchResults = null
   state.searchForm.birthday = convertDate(state.searchForm.birthday)
 
-  axios.post('/api/search-red/pp', state.searchForm)
+  // axios.post('/api/search-red/pp', state.searchForm)
+  axios.post('http://localhost:9000/search-red/pp', state.searchForm)
       .then(resp => {
         console.log(resp)
         state.isLoading = false;

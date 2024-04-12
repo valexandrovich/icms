@@ -31,7 +31,8 @@ const search = () => {
   state.isNoResults = false;
   state.searchResults = null
 
-  axios.post('/api/search-red/le', state.searchForm)
+  // axios.post('/api/search-red/le', state.searchForm)
+  axios.post('http://localhost:9000/search-red/le', state.searchForm)
       .then(resp => {
         console.log(resp)
         state.isLoading = false;

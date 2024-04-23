@@ -6,13 +6,14 @@ import axios from "axios";
 import ProgressTableComponent from "@/components/ProgressTableComponent.vue";
 
 const state = reactive({
-  storedJobs: []
+  storedJobs: [],
+  tmpUrl: ''
 })
 
 onMounted(() => {
   // axios.get('/api/scheduler/stored-jobs')
-  // axios.get('http://web-backend:9000/scheduler/stored-jobs')
-  axios.get('http://localhost:9000/scheduler/stored-jobs')
+  axios.get('http://web-backend:9000/scheduler/stored-jobs')
+  // axios.get('http://localhost:9000/scheduler/stored-jobs')
       .then(resp => {
         state.storedJobs = resp.data
       })
@@ -31,6 +32,16 @@ const initStoredJob = (storedJobId) => {
   axios.post('/api/scheduler/init', storedJobRequest);
 }
 
+const tst = () => {
+  axios.get(state.tmpUrl)
+      .then(resp => {
+        console.log(resp)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+}
+
 </script>
 
 <template>
@@ -42,6 +53,11 @@ const initStoredJob = (storedJobId) => {
         <font-awesome-icon :icon="['fas', 'calendar']" class="mr-2 fa-fw"/>
         РОЗКЛАД</span>
     </div>
+
+
+    <input type="text" v-model="state.tmpUrl">
+    <button @click="tst">Test</button>
+
     <div class="flex flex-col">
       <div class="flex flex-col">
         <div

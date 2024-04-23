@@ -7,14 +7,14 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: '0.0.0.0',
+    // host: '0.0.0.0',
     proxy: {
       '/api': {
         // target: 'http://23.88.42.241:9000',
         target: 'http://web-backend:9000',
         // target: 'http://localhost:9000',
         changeOrigin: true,
-        secure: false,
+        // secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     },

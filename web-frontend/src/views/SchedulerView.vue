@@ -12,7 +12,7 @@ const state = reactive({
 
 onMounted(() => {
   // axios.get('/api/scheduler/stored-jobs')
-  axios.get('http://23.88.42.241:9000/scheduler/stored-jobs')
+  axios.get('/api/scheduler/stored-jobs')
   // axios.get('http://localhost:9000/scheduler/stored-jobs')
       .then(resp => {
         state.storedJobs = resp.data
